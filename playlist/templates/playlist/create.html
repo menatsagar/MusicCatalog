@@ -1,0 +1,38 @@
+{% extends 'playlist/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block page_content %}
+
+
+<div class="form-content" id="step1">
+  <h2 class="form-title">Add New Playlist</h2>
+  <form class="row gy-3 gy-md-3 gy-lg-4 gx-2 gx-xl-5 gx-lg-4 gx-md-2" method="POST" id="add_company_form">
+    {% csrf_token%}
+    
+    <div class="col-md-12 col-lg-12">
+        <label for="title" class="form-label">Name</label>
+                             <span class="required">*</span>
+
+        {{form.title |attr:"required"|attr:"autofocus"|attr:"class:form-control"|attr:"placeholder:Enter playlist title"}}
+        <span class="error_message_span" >{{form.title.errors}}</span>
+      </div>
+
+
+      <div class="col-md-12 col-lg-6">
+        <label for="shift" class="form-label">Tracks</label>
+                                     <span class="required">*</span>
+        {{form.tracks |attr:"required"|attr:"autofocus"|attr:"class:form-control form-select"|attr:"placeholder:Select tracks"}}
+
+      </div>
+
+    <div class="col-md-12 text-end">
+      <div class="form-btnsection">
+        <a href="{% url 'playlist:all-playlist' %}" class="btn theme-btn">Back</a>
+        <button type="submit" id="add_company_btn" class="btn theme-btn">Add</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock page_content %}

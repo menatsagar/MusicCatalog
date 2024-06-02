@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Playlists</title>
+</head>
+<body>
+    <h1>Playlists</h1>
+    <a href="{% url 'playlist_create' %}">Create new playlist</a>
+    <ul>
+        {% for playlist in playlists %}
+            <li>
+                <a href="{% url 'playlist_detail' playlist.id %}">{{ playlist.title }}</a>
+                <a href="{% url 'playlist_update' playlist.id %}">Edit</a>
+                <form action="{% url 'playlist_delete' playlist.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

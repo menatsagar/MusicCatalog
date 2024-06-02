@@ -1,0 +1,107 @@
+{% extends 'playlist/base.html' %}
+{% load static %}
+{% block title %}All Playlist{% endblock title %}
+{% block extra_css %}{% endblock extra_css %}
+{% block breadcrumb %}All Playlist{% endblock breadcrumb %}
+{% block page_title %}All Playlist{% endblock page_title %}
+{% block page_content %}
+
+<div class="table-wrapper ">
+  <div class="custom-table-header cs-detailheader">
+    <input type="text" id="baseUrl" value="{{baseUrl}}" hidden/>
+    <div class="cs-left">
+    </div>
+    <div class="cs-right">
+      <a class="btn theme-btn" href="{% url 'playlist:create-playlist' %}">Add New Playlist</a>
+    </div>
+  </div>
+
+  <div class="custom-table-box">
+    <div class="table-responsive">
+      <table class="table" id="company-listings">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">total tracks</th>
+            <th scope="col">ACTION</th>
+          </tr>
+        </thead>
+        {% for playlist in playlists %}
+        <tr>
+            <th scope="col">{{playlist.title}}</th>
+            <th scope="col">{{playlist.tracks.count}}</th>
+          
+            <th>
+              <!-- <a class="btn textbtn" href="{{url}}"><i class="fas fa-eye"></i></a> -->
+              <a class="btn textbtn" href="{% url 'playlist:update-playlist' playlist=playlist.id %}"><i class="fas fa-pen"></i></a>
+              <a class="btn textbtn" ><i class="far fa-trash-alt delete_confirmation" data-id="{{playlist.id}}"></i></a></th>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock page_content %}
+{% block modals %}
+
+<div class="modal" tabindex="-1" id="delete_confirmation_modal" class="delete_confirmation_modal">
+  {% csrf_token %}
+  <input type="hidden" value="" id="hidden_playlist_id">
+   <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+       <div class="modal-body form-content ">
+         <h5>Are you Sure You Want to Delete?</h5>
+         <div class="modalinputfield">
+         </div>
+         <div class="btnfooter">
+           <button type="button" data-bs-dismiss="modal" class="btn theme-btn">No</button>
+           <button type="button" id="delete_playlist" class="btn theme-btn">Yes</button>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+
+{% endblock modals %}
+{% block extra_js %}
+
+
+
+<script>
+
+</script>
+<script>
+
+  $(document).on("click",".delete_confirmation" , function(){
+
+    let dataId = $(this).data("id");
+    $("#delete_confirmation_modal").modal("show");
+    $("#hidden_playlist_id").val(dataId);
+  });
+
+  $(document).on("click","#delete_playlist", function(e){
+      $(this).prop('disabled', true);
+
+      let playlist_id = $("#hidden_playlist_id").val();
+      let baseUrl = $("#baseUrl").val();
+      let csrf_token = $("[name='csrfmiddlewaretoken']").val();
+      let url = `${baseUrl}/playlist/delete/${playlist_id}/`
+      $.ajax({
+        type: 'POST',
+        url: url,
+        headers: { 'X-CSRFToken': csrf_token },
+        complete: function(xhr, status) {
+          $("#delete_confirmation_modal").modal("hide");
+          location.reload(true);
+        },
+        error: function (err) {
+            console.log(err.data);
+        },
+
+
+    });
+  })
+
+</script>
+{% endblock extra_js %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ playlist.title }}</title>
+</head>
+<body>
+    <h1>{{ playlist.title }}</h1>
+    <ul>
+        {% for track in playlist.tracks.all %}
+            <li>{{ track.title }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'playlist_update' playlist.id %}">Edit</a>
+    <form action="{% url 'playlist_delete' playlist.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+    <a href="{% url 'playlist_list' %}">Back to list</a>
+</body>
+</html>
